@@ -70,7 +70,18 @@ class fairdicegame : public contract {
         return uint64_hash(mixed_seed) % 100 + 1;
     }
 
-    asset compute_referrer_reward(const st_bet& bet) { return bet.amount / 200; }
+    asset compute_referrer_reward(const asset& amount) { return amount / 200; }
+
+    asset compute_offer(const asset& amount, const account_name& referrer) {
+        if (is_valid_referrer(referrer)) {
+            return amount - compute_referrer_reward(amount);
+        }
+        return amount;
+    }
+
+    bool is_valid_referrer(const account_name& referrer) {
+        return referrer != _self;
+    }
 
     uint64_t next_id() {
         st_global global = _global.get_or_default(
@@ -140,11 +151,11 @@ class fairdicegame : public contract {
         eosio_assert(quantity.amount >= 1000, "transfer quantity must be greater than 0.1");
     }
 
-    void assert_roll_under(const uint8_t& roll_under, const asset& quantity) {
+    void assert_roll_under(const uint8_t& roll_under, const asset& offer) {
         eosio_assert(roll_under >= 2 && roll_under <= 96,
                      "roll under overflow, must be greater than 2 and less than 96");
         eosio_assert(
-            max_payout(roll_under, quantity) <= max_bonus(),
+            max_payout(roll_under, offer) <= max_bonus(),
             "offered overflow, expected earning is greater than the maximum bonus");
     }
 
