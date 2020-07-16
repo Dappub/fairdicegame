@@ -109,9 +109,6 @@ In this case, since the randomness of the final roll number is dependent on both
 
 > https://github.com/Dappub/fairdicegame
 
-If you'd like to play our "FairDice" game, here's the corresponding game page:
-
-> https://dapp.pub/dice
 
 You could find more info here:
 
